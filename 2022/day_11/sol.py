@@ -1,6 +1,6 @@
 import sys, re
 from functools import reduce
-from copy import deepcopy
+
 
 def ints(inp: str = None):
     return map(int, re.findall(r"-?\d+", inp or sys.stdin.read()))

@@ -7,6 +7,7 @@ from copy import deepcopy
 AMIN = -float("inf")
 AMAX = float("inf")
 sign = lambda x: -1 if x < 0 else (1 if x > 0 else 0)
+prod = lambda array: reduce(lambda a, b: a * b, array, 1)
 
 def ints(inp: str = None):
     return map(int, re.findall(r"-?\d+", inp or sys.stdin.read()))
