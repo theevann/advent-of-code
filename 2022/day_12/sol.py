@@ -21,9 +21,13 @@ in_file = sys.argv[1] if len(sys.argv) > 1 else "input"
 data = open(in_file, 'r').read().splitlines()
     
 data = [[x for x in y] for y in data]
-# data = np.loadtxt("input", dtype=int, delimiter="\n")
 
-cost_so_far = [[AMAX]*len(data[0]) for _ in range(len(data))]
+for i in range(len(data)):
+    for j in range(len(data[0])):
+        if data[i][j] == 'S':
+            S = (i, j)
+        elif data[i][j] == 'E':
+            E = (i, j)
 
 
 def cost(A, B):
@@ -36,7 +40,6 @@ def cost(A, B):
     if B == "E":
         B = "z"
     return ord(A) - ord(B)
-
 
 def get_cost_so_far_1(x, y, current_cost=0):
     if cost_so_far[x][y] > current_cost:
@@ -53,26 +56,13 @@ def get_cost_so_far_2(x, y, current_cost=0):
                 get_cost_so_far_2(i, j, current_cost=current_cost+1)
 
 
+# Part 1
 cost_so_far = [[AMAX]*len(data[0]) for _ in range(len(data))]
-for i in range(len(data)):
-    for j in range(len(data[0])):
-        if data[i][j] == 'S':
-            get_cost_so_far_1(i, j, current_cost=0)
-            for k in range(len(data)):
-                for l in range(len(data[0])):
-                    if data[k][l] == 'E':
-                        print(cost_so_far[k][l])
+get_cost_so_far_1(S[0], S[1])
+print(cost_so_far[E[0]][E[1]])
 
 
+# Part 2
 cost_so_far = [[AMAX]*len(data[0]) for _ in range(len(data))]
-for i in range(len(data)):
-    for j in range(len(data[0])):
-        if data[i][j] == 'E':
-            get_cost_so_far_2(i, j, current_cost=0)
-        
-new_min = AMAX
-for i in range(len(data)):
-    for j in range(len(data[0])):
-        if data[i][j] == 'a':
-            new_min = min(cost_so_far[i][j], new_min)
-print(new_min)
+get_cost_so_far_2(E[0], E[1])
+print(min(cost_so_far[i][j] for i in range(len(data)) for j in range(len(data[0])) if data[i][j] == 'a'))
