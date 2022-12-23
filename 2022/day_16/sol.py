@@ -1,9 +1,6 @@
 import sys, re
-import numpy as np
-from collections import Counter, defaultdict
-from functools import lru_cache, reduce
+from functools import lru_cache
 from itertools import combinations
-from copy import deepcopy
 
 AMAX = float("inf")
 
@@ -13,16 +10,20 @@ def ints(inp: str = None):
 in_file = sys.argv[1] if len(sys.argv) > 1 else "input"
 data = open(in_file, 'r').read().splitlines()
     
-data = [[x for x in y.split()] for y in data]
-data = {y[1]: [int(y[4][5:-1]), [x.strip(",") for x in y[9:]]] for y in data}
+data = {
+    y[1]: {
+        "value": int(y[4][5:-1]),
+        "neighbours": [x.strip(",") for x in y[9:]]
+    } for y in [z.split() for z in data]
+}
 
 
 
-to_release = set(l for l, (p, ls) in data.items() if p > 0)
+to_release = set(n for n, valve in data.items() if valve["value"] > 0)
 
 
 def min_time_to_node(start, goal, visited):
-    neighbours = data[start][1]
+    neighbours = data[start]["neighbours"]
     visited.add(start)
     if goal in neighbours:
         return 1
@@ -53,7 +54,7 @@ def max_release(current, left_to_release, time_left):
             
             max_releasable = max(max_releasable, releasable)
           
-    return max_releasable + data[current][0] * time_left
+    return max_releasable + data[current]["value"] * time_left
 
 
 # Part 1
